@@ -58,7 +58,7 @@ async function edit(id_form) {
       id: id_form,
       status: 2,
     };
-    const res = await $fetch("http://192.168.1.26:8000/lost-item/status", {
+    const res = await $fetch("http://192.168.1.27:8000/lost-item/status", {
       method: "PUT",
       body: data,
       headers: { "Content-Type": "application/json" },
@@ -88,7 +88,7 @@ async function deleteItem(id) {
 
   try {
     const response = await fetch(
-      `http://192.168.1.26:8000/api/lost-item/${id}`,
+      `http://192.168.1.27:8000/api/lost-item/${id}`,
       {
         method: "DELETE",
       }
@@ -199,7 +199,7 @@ const test2 = computed(() => ({
                     class="object-cover"
                     width="150px"
                     height="150px"
-                    :src="'http://192.168.1.26:8000' + item.picture"
+                    :src="'http://192.168.1.27:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>
@@ -237,7 +237,7 @@ const test2 = computed(() => ({
             <div v-if="item.picture" class="my-2 text-center">
               <img
                 class="object-cover w-full h-[200px] md:h-[150px] rounded-md shadow-sm"
-                :src="'http://192.168.1.26:8000' + item.picture"
+                :src="'http://192.168.1.27:8000' + item.picture"
                 alt="Lost Item"
               />
             </div>
@@ -271,7 +271,7 @@ const test2 = computed(() => ({
           <div v-if="item.picture" class="my-2 text-center">
             <img
               class="object-cover w-full h-[200px] md:h-[150px] rounded-md shadow-sm"
-              :src="'http://192.168.1.26:8000' + item.picture"
+              :src="'http://192.168.1.27:8000' + item.picture"
               alt="Lost Item"
             />
           </div>
