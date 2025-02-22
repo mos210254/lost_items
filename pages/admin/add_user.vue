@@ -101,8 +101,6 @@ async function add_user() {
     reloadNuxtApp({ ttl: 1 });
   }
 }
-ยย;
-
 async function edit_user(id_user) {
   const container = document.createElement("div");
   console.log("user id:", id_user);

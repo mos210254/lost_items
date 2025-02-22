@@ -107,6 +107,7 @@ const test2 = computed(() => ({
 }));
 
 const filteredItems = ref([]);
+const selectedStatus = ref(0); // เปลี่ยนจาก null เป็น ""
 
 function data_serach() {
   const keyword = input_data.value?.toLowerCase() || "";
@@ -114,6 +115,8 @@ function data_serach() {
   const day = selectedDay.value;
   const month = selectedMonth.value;
   const year = selectedYear.value;
+  const status = selectedStatus.value;
+  console.log(typeof status);
 
   filteredItems.value = allItems.value.data.filter((item) => {
     const itemDate = new Date(item.date);
@@ -129,7 +132,8 @@ function data_serach() {
       (!category || item.category === category) &&
       (!day || itemDay === day) &&
       (!month || itemMonth === months.value.indexOf(month) + 1) &&
-      (!year || itemYear === year)
+      (!year || itemYear === year) &&
+      (!status || Number(status) === item.status)
     );
   });
   if (filteredItems.value && filteredItems.value.length > 0) {
@@ -146,6 +150,48 @@ function data_serach() {
     });
   }
 }
+
+// function data_search() {
+//   const keyword = input_data.value?.toLowerCase() || "";
+//   const category = selectedCategory.value || "";
+//   const day = selectedDay.value;
+//   const month = selectedMonth.value;
+//   const year = selectedYear.value;
+//   const status = selectedStatus.value || ""; // สถานะที่เลือก (string)
+
+//   filteredItems.value = allItems.value.data.filter((item) => {
+//     const itemDate = new Date(item.date);
+//     const itemDay = itemDate.getDate();
+//     const itemMonth = itemDate.getMonth() + 1;
+//     const itemYear = itemDate.getFullYear();
+
+//     return (
+//       (!keyword ||
+//         item.id.toString().includes(keyword) ||
+//         item.detail.toLowerCase().includes(keyword) ||
+//         item.location.toLowerCase().includes(keyword)) &&
+//       (!category || item.category === category) &&
+//       (!day || itemDay === day) &&
+//       (!month || itemMonth === months.value.indexOf(month) + 1) &&
+//       (!year || itemYear === year) &&
+//       (!status || String(item.status) === status) // เปรียบเทียบค่าเป็น string
+//     );
+//   });
+
+//   if (filteredItems.value && filteredItems.value.length > 0) {
+//     console.log("ผลลัพธ์ที่ค้นหา", filteredItems.value);
+//   } else {
+//     Swal.fire({
+//       title: "ไม่พบสิ่งของ",
+//       text: "กรุณาตรวจสอบคำค้นหา!",
+//       icon: "warning",
+//       timer: 1000,
+//       showConfirmButton: false,
+//       allowOutsideClick: false,
+//       allowEscapeKey: false,
+//     });
+//   }
+// }
 
 function btn_reset() {
   input_data.value = null;
@@ -177,20 +223,28 @@ async function edit(id_form) {
       };
     },
     template: `
-        <div v-for="data in data_item" :key="data.id">
-          <h1>รหัสที่: {{ data.id }}</h1>  
-          <p>ชื่ออุปกรณ์: {{ data.name }}</p>  
+        <div class="grid grid-cols-1   gap-5">
+          <div
+            v-for="data in data_item"
+            :key="data.id"
+            class="bg-white shadow-lg rounded-xl p-5 border border-gray-200"
+          >
+            <h1 class="text-xl font-semibold text-blue-600">รหัสของหายที่: {{ data.id }}</h1>
+            <p class="text-gray-700"><span class="font-semibold">ชื่อผู้แจ้ง:</span> {{ data.name }}</p>
+            <p class="text-gray-700"><span class="font-semibold">ประเภท:</span> {{ data.category }}</p>
+            <p class="text-gray-700"><span class="font-semibold">รายละเอียด:</span> {{ data.detail }}</p>
+          </div>
         </div>
     `,
   });
   app.mount(container);
 
   Swal.fire({
-    title: "แก้ไขอุปกรณ์",
+    title: "รายละเอียด",
     html: container,
     width: "500px",
     showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
+    confirmButtonText: "พบแล้ว",
     cancelButtonText: "ยกเลิก",
     allowOutsideClick: false,
     allowEscapeKey: false,
@@ -213,7 +267,7 @@ async function edit(id_form) {
       body: data,
     });
     Swal.fire({
-      title: "แก้ไขสำเร็จ",
+      title: "อัปเดตสถานะเรียบร้อย",
       icon: "success",
       timer: 1000,
       showConfirmButton: false,
@@ -262,7 +316,7 @@ async function deleteItem(id) {
     <HamburgerMenuAdmin />
     <div class="md:py-[2rem] py-3 px-3 md:px-[3rem]">
       <div>
-        <h1 class="text-[4rem]">ยินดีต้อนรับเข้าสู่</h1>
+        <h1 class="text-[4rem]">ยินดีต้อนรับเข้าสู่dadad</h1>
         <p class="text-[2rem]">รายการของหาย</p>
       </div>
       <div class="grid md:grid-cols-2 gap-[3rem]">
@@ -352,6 +406,11 @@ async function deleteItem(id) {
               </option>
             </select>
           </div>
+          <select v-model="selectedStatus" class="border p-2 rounded-md">
+            <option value="">-- สถานะทั้งหมด --</option>
+            <option value="1">กำลังรอเจ้าของมารับ</option>
+            <option value="2">ส่งคืนสำเร็จ</option>
+          </select>
 
           <!-- 🔘 ปุ่มค้นหา & รีเซ็ต -->
           <div id="btn" class="flex flex-wrap gap-3">
@@ -429,17 +488,20 @@ async function deleteItem(id) {
                   {{ test2[item.status] }}
                 </td>
                 <td class="border-r border-amber-400 p-3">
-                  <div class="grid grid-cols-2">
-                    <div>
-                      <button @click="edit(item.id)" class="border">
-                        แก้ไข
-                      </button>
-                    </div>
-                    <div>
-                      <button @click="deleteItem(item.id)" class="border">
-                        ลบ
-                      </button>
-                    </div>
+                  <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button
+                      @click="edit(item.id)"
+                      class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+                    >
+                      ✏️ แก้ไข
+                    </button>
+
+                    <button
+                      @click="deleteItem(item.id)"
+                      class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
+                    >
+                      🗑️ ลบ
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -477,20 +539,19 @@ async function deleteItem(id) {
             >
               {{ test2[item.status] }}
             </p>
-            <div class="text-center grid grid-cols-2 gap-5">
+            <div class="grid grid-cols-2 gap-2 mt-3">
               <button
                 @click="edit(item.id)"
-                type="button"
-                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
               >
-                แก้ไข
+                ✏️ แก้ไข
               </button>
+
               <button
                 @click="deleteItem(item.id)"
-                type="button"
-                class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 disabled:opacity-50 disabled:pointer-events-none"
+                class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
               >
-                ลบ
+                🗑️ ลบ
               </button>
             </div>
           </div>
@@ -539,3 +600,10 @@ async function deleteItem(id) {
     </div>
   </div>
 </template>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Itim&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
+body {
+  font-family: "Kanit", serif;
+}
+</style>

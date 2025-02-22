@@ -143,19 +143,21 @@ const test2 = computed(() => ({
         <h1 class="text-[4rem]">ยินดีต้อนรับเข้าสู่</h1>
         <p class="text-[2rem]">ระบบแจ้งของหาย</p>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-2 gap-4 md:gap-6">
         <nuxt-link to="/admin/Form">
           <div
-            class="bg-[#C6E7FF] shadow-md rounded-2xl h-[150px] items-center flex justify-center cursor-pointer"
+            class="bg-gradient-to-r from-blue-200 to-blue-600 text-white rounded-2xl h-[150px] flex items-center justify-center cursor-pointer transition transform shadow-xl backdrop-blur-md hover:shadow-2xl hover:scale-105 hover:rotate-1"
           >
-            <p class="text-[2rem]">แจ้งของหาย</p>
+            <p class="text-2xl font-semibold drop-shadow-md">📢 แจ้งของหาย</p>
           </div>
         </nuxt-link>
         <nuxt-link to="/admin/oficer_edit">
           <div
-            class="bg-[#C6E7FF] shadow-md rounded-2xl h-[150px] items-center flex justify-center cursor-pointer"
+            class="bg-gradient-to-r from-blue-300 to-blue-600 text-white rounded-2xl h-[150px] flex items-center justify-center cursor-pointer transition transform shadow-xl backdrop-blur-md hover:shadow-2xl hover:scale-105 hover:-rotate-1"
           >
-            <p class="text-[2rem] text-center">รายการของหาย</p>
+            <p class="text-2xl font-semibold text-center drop-shadow-md">
+              📋 รายการของหาย
+            </p>
           </div>
         </nuxt-link>
       </div>
@@ -184,40 +186,45 @@ const test2 = computed(() => ({
               <tr
                 v-for="item in latestItems"
                 :key="item.id"
-                class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
+                class="odd:bg-[#ECF8F8] even:[#E3F2FD] hover:bg-gray-100 transition"
               >
-                <td class="border-r border-amber-400 p-3 text-left">
+                <td class="border-r border-amber-100 p-3 text-left">
                   0{{ item.id }}
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left">
+                <td class="border-r border-amber-100 p-3 text-left">
                   {{ item.category }}
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left w-[200px]">
+                <td class="border-r border-amber-100 p-3 text-left w-[200px]">
                   <img
-                    @click="test(item.id)"
                     v-if="item.picture"
-                    class="object-cover"
-                    width="150px"
-                    height="150px"
+                    class="object-cover w-[150px] h-[150px] rounded-md shadow-sm"
                     :src="'http://192.168.1.27:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left">
+                <td class="border-r border-amber-100 p-3 text-left">
                   {{ new Date(item.date).toLocaleDateString() }}
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left">
+                <td class="border-r border-amber-100 p-3 text-left">
                   {{ item.location }}
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left">
+                <td class="border-r border-amber-100 p-3 text-left">
                   {{ test2[item.status] }}
                 </td>
-                <td class="border-r border-amber-400 p-3 text-left">
-                  <div class="grid grid-cols-2 gap-5">
-                    <button @click="edit(item.id)" class="p-2 border">
-                      แก้ไข</button
-                    ><button @click="deleteItem(item.id)" class="p-2 border">
-                      ลบ
+                <td class="border-r border-amber-100 p-3 text-left">
+                  <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button
+                      @click="edit(item.id)"
+                      class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+                    >
+                      ✏️ แก้ไข
+                    </button>
+
+                    <button
+                      @click="deleteItem(item.id)"
+                      class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
+                    >
+                      🗑️ ลบ
                     </button>
                   </div>
                 </td>
@@ -289,20 +296,19 @@ const test2 = computed(() => ({
           >
             {{ test2[item.status] }}
           </p>
-          <div class="text-center grid grid-cols-2 gap-5">
+          <div class="grid grid-cols-2 gap-2 mt-3">
             <button
               @click="edit(item.id)"
-              type="button"
-              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
             >
-              แก้ไข
+              ✏️ แก้ไข
             </button>
+
             <button
               @click="deleteItem(item.id)"
-              type="button"
-              class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 disabled:opacity-50 disabled:pointer-events-none"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition"
             >
-              ลบ
+              🗑️ ลบ
             </button>
           </div>
         </div>

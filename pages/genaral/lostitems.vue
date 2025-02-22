@@ -106,12 +106,16 @@ const test2 = computed(() => ({
 
 const filteredItems = ref([]);
 
+const selectedStatus = ref(0); // เปลี่ยนจาก null เป็น ""
+
 function data_serach() {
   const keyword = input_data.value?.toLowerCase() || "";
   const category = selectedCategory.value || "";
   const day = selectedDay.value;
   const month = selectedMonth.value;
   const year = selectedYear.value;
+  const status = selectedStatus.value;
+  console.log(typeof status);
 
   filteredItems.value = allItems.value.data.filter((item) => {
     const itemDate = new Date(item.date);
@@ -127,7 +131,8 @@ function data_serach() {
       (!category || item.category === category) &&
       (!day || itemDay === day) &&
       (!month || itemMonth === months.value.indexOf(month) + 1) &&
-      (!year || itemYear === year)
+      (!year || itemYear === year) &&
+      (!status || Number(status) === item.status)
     );
   });
   if (filteredItems.value && filteredItems.value.length > 0) {
@@ -165,7 +170,7 @@ function btn_reset() {
         <p class="text-[2rem]">รายการของหาย</p>
       </div>
       <div class="grid md:grid-cols-2 gap-[3rem]">
-        <div class="flex flex-col gap-5 p-4 bg-white shadow-md rounded-lg">
+        <div class="flex flex-col gap-5 p-4 bg-white shadow rounded-lg">
           <!-- 🔍 ค้นหา -->
           <div class="flex flex-col">
             <label for="Search" class="text-2xl font-medium text-gray-700"
@@ -176,7 +181,7 @@ function btn_reset() {
               id="Search"
               type="text"
               placeholder="พิมพ์เพื่อค้นหา..."
-              class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+              class="!outline-none p-2 border-2 rounded-md border-blue-200"
             />
           </div>
 
@@ -189,7 +194,7 @@ function btn_reset() {
               <!-- Select วันที่ -->
               <select
                 v-model="selectedDay"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option v-for="day in days" :key="day" :value="day">
                   {{ day }}
@@ -201,7 +206,7 @@ function btn_reset() {
               <!-- Select เดือน -->
               <select
                 v-model="selectedMonth"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option
                   v-for="(month, index) in months"
@@ -217,7 +222,7 @@ function btn_reset() {
               <!-- Select ปี -->
               <select
                 v-model="selectedYear"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option v-for="year in years" :key="year" :value="year">
                   {{ year }}
@@ -229,17 +234,17 @@ function btn_reset() {
 
         <div
           id="Search"
-          class="flex flex-col gap-5 p-4 bg-white shadow-md rounded-lg"
+          class="flex flex-col gap-5 p-4 bg-white shadow rounded-lg"
         >
           <!-- 🔎 ค้นหาด้วยหมวดหมู่ -->
           <div class="flex flex-col">
-            <label for="category" class="text-sm font-medium text-gray-700">
+            <label for="category" class="text-2xl font-medium text-gray-700">
               ค้นหาด้วยหมวดหมู่
             </label>
             <select
               id="category"
               v-model="selectedCategory"
-              class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+              class="!outline-none p-2 border-2 rounded-md border-blue-200"
             >
               <option value="" disabled selected>เลือกหมวดหมู่</option>
               <option
@@ -251,18 +256,23 @@ function btn_reset() {
               </option>
             </select>
           </div>
+          <select v-model="selectedStatus" class="!outline-none p-2 border-2 rounded-md border-amber-200">
+            <option value="">-- สถานะทั้งหมด --</option>
+            <option value="1">กำลังรอเจ้าของมารับ</option>
+            <option value="2">ส่งคืนสำเร็จ</option>
+          </select>
 
           <!-- 🔘 ปุ่มค้นหา & รีเซ็ต -->
           <div id="btn" class="flex flex-wrap gap-3">
             <button
               @click="data_serach()"
-              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md shadow-md hover:bg-amber-600 transition"
+              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md  hover:bg-amber-600 transition"
             >
               ค้นหา
             </button>
             <button
               @click="btn_reset()"
-              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md shadow-md hover:bg-gray-400 transition"
+              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md  hover:bg-gray-400 transition"
             >
               ค่าเริ่มต้น
             </button>
@@ -271,25 +281,47 @@ function btn_reset() {
       </div>
 
       <div class="mt-[2rem]">
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-lg shadow">
           <table
-            class="w-full border border-gray-300 shadow-md rounded-lg overflow-hidden hidden md:table"
+            class="w-full shadow-md rounded-lg overflow-hidden hidden md:table"
           >
             <thead>
               <tr class="bg-amber-200 text-gray-700 text-sm">
-                <th class="border-r border-amber-400 p-3 text-left">#</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  #
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   หมวดหมู่
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">รูปภาพ</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  รูปภาพ
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   รายละเอียด
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   วันที่พบ
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานที่</th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานะ</th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานที่
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานะ
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -298,27 +330,37 @@ function btn_reset() {
                 :key="item.id"
                 class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
               >
-                <td class="border-r border-amber-100 p-3">0{{ item.id }}</td>
-                <td class="border-r border-amber-100 p-3">
+                <td
+                  class="border-r border-amber-100 p-3 text-center text-[1.2rem]"
+                >
+                  0{{ item.id }}
+                </td>
+                <td
+                  class="border-r border-amber-100 p-3 text-center text-[1.2rem]"
+                >
                   {{ test[item.category] }}
                 </td>
-                <td class="border-r border-amber-100 p-3 w-[200px]">
+                <td
+                  class="border-r border-amber-100 p-3 w-[200px] text-center text-[1.2rem]"
+                >
                   <img
                     v-if="item.picture"
-                    class="object-cover w-[150px] h-[150px] rounded-md shadow-sm"
+                    class="object-cover w-[200px] h-[200px] rounded-md shadow-sm"
                     :src="'http://192.168.1.27:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>
-                <td class="border-r border-amber-100 p-3">{{ item.detail }}</td>
-                <td class="border-r border-amber-100 p-3">
+                <td class="border-r border-amber-100 p-3 text-[1.2rem]">
+                  {{ item.detail }}
+                </td>
+                <td class="border-r border-amber-100 p-3 text-[1.2rem]">
                   {{ new Date(item.date).toLocaleDateString() }}
                 </td>
-                <td class="border-r border-amber-100 p-3">
+                <td class="border-r border-amber-100 p-3 text-[1.2rem]">
                   {{ item.location }}
                 </td>
                 <td
-                  class="border-r border-amber-100 p-3 font-semibold"
+                  class="border-r border-amber-100 p-3 font-semibold text-[1.2rem] text-center min-w-max"
                   :class="item.status === 2 ? 'text-green-500' : 'text-red-500'"
                 >
                   {{ test2[item.status] }}
