@@ -12,5 +12,6 @@ useHead({
     { src: "https://kit.fontawesome.com/7126d50135.js" },
     { src: "https://cdn.jsdelivr.net/npm/sweetalert2@11" },
   ],
+  
 });
 </script>
