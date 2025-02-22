@@ -5,7 +5,7 @@ definePageMeta({
 import { ref, computed } from "vue";
 
 const { data: allItems } = await useFetch(
-  "http://192.168.1.26:8000/api/lost-item"
+  "http://192.168.1.27:8000/api/lost-item"
 );
 console.log(allItems.value.data);
 

@@ -7,7 +7,7 @@ const router = useRouter();
 const username = ref("");
 const password = ref("");
 const errorMessage = ref("");
-console.log("dada")
+console.log("dada");
 // ใช้ Cookie แทน LocalStorage
 const isLoggedIn = useCookie("isLoggedIn");
 const adminName = useCookie("adminName");
@@ -16,7 +16,7 @@ const login = async () => {
   errorMessage.value = "";
 
   try {
-    const admins = await $fetch("http://192.168.1.26:8000/api/admin");
+    const admins = await $fetch("http://192.168.1.27:8000/api/admin");
 
     const admin = admins.find(
       (a) => a.username === username.value && a.password === password.value

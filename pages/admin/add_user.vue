@@ -7,7 +7,7 @@ const admins = ref([]);
 
 const fetchAdmins = async () => {
   try {
-    admins.value = await $fetch("http://192.168.1.26:8000/api/admin");
+    admins.value = await $fetch("http://192.168.1.27:8000/api/admin");
   } catch (error) {
     console.error("❌ Error fetching admin data:", error);
   }
@@ -85,7 +85,7 @@ async function add_user() {
       username: username.value,
       password: password.value,
     };
-    const res = await $fetch("http://192.168.1.26:8000/admin/insert", {
+    const res = await $fetch("http://192.168.1.27:8000/admin/insert", {
       method: "POST",
       body: data,
       headers: { "Content-Type": "application/json" },
@@ -100,13 +100,14 @@ async function add_user() {
     });
     reloadNuxtApp({ ttl: 1 });
   }
-}ยย
+}
+ยย;
 
 async function edit_user(id_user) {
   const container = document.createElement("div");
   console.log("user id:", id_user);
   // ดึงข้อมูลผู้ใช้จาก API
-  const userData = await $fetch(`http://192.168.1.26:8000/api/admin`);
+  const userData = await $fetch(`http://192.168.1.27:8000/api/admin`);
   const user = await userData.find((e) => e.id === id_user);
   console.log(user);
   let name = ref(user.name);
@@ -168,7 +169,7 @@ async function edit_user(id_user) {
       password: password.value,
     };
 
-    const res = await $fetch(`http://192.168.1.26:8000/admin/edit_user`, {
+    const res = await $fetch(`http://192.168.1.27:8000/admin/edit_user`, {
       method: "PUT",
       body: data,
       headers: { "Content-Type": "application/json" },
@@ -211,7 +212,7 @@ async function del_user(id_user) {
   if (!result.isConfirmed) return; // ถ้ากดยกเลิกให้หยุดทำงาน
 
   try {
-    const res = await $fetch("http://192.168.1.26:8000/admin/delete_user", {
+    const res = await $fetch("http://192.168.1.27:8000/admin/delete_user", {
       method: "DELETE",
       body: { id: id_user },
     });

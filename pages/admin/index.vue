@@ -16,7 +16,7 @@ const login = async () => {
   errorMessage.value = "";
 
   try {
-    const admins = await $fetch("http://192.168.1.26:8000/api/admin");
+    const admins = await $fetch("http://192.168.1.27:8000/api/admin");
 
     const admin = admins.find(
       (a) => a.username === username.value && a.password === password.value
