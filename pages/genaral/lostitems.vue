@@ -321,7 +321,7 @@ function btn_reset() {
                   สถานที่
                 </th>
                 <th
-                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                  class=" p-3 text-center text-[1.4rem]"
                 >
                   สถานะ
                 </th>
@@ -449,10 +449,14 @@ function btn_reset() {
           </button>
         </div>
       </div>
-      <p>
-        สามารถไปรับของหายได้ที่ <br />
-        ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
-      </p>
+      <div class="flex">
+        <p
+          class="bg-blue-200 p-3 rounded-2xl text-[16px] border border-blue-700"
+        >
+          สามารถไปแจ้งรับ/แจ้งของหายได้ที่ <br />
+          ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
+        </p>
+      </div>
     </div>
   </div>
 </template>

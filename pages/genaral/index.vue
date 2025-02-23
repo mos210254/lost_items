@@ -101,11 +101,7 @@ const test = computed(() => ({
                 >
                   สถานที่
                 </th>
-                <th
-                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
-                >
-                  สถานะ
-                </th>
+                <th class="p-3 text-center text-[1.4rem]">สถานะ</th>
               </tr>
             </thead>
             <tbody>
@@ -182,14 +178,22 @@ const test = computed(() => ({
             <p>
               <span class="font-semibold">สถานที่:</span> {{ item.location }}
             </p>
-            <td
-              class="border-r border-amber-100 p-3 font-semibold text-[1.2rem]"
+            <p
+              class="font-semibold mt-2"
               :class="item.status === 2 ? 'text-green-500' : 'text-red-500'"
             >
               {{ test2[item.status] }}
-            </td>
+            </p>
           </div>
         </div>
+      </div>
+      <div class="flex">
+        <p
+          class="bg-blue-200 p-3 rounded-2xl text-[16px] border border-blue-700"
+        >
+          สามารถไปแจ้งรับ/แจ้งของหายได้ที่ <br />
+          ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
+        </p>
       </div>
     </div>
   </div>
