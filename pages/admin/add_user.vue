@@ -32,20 +32,33 @@ async function add_user() {
     methods: {},
     computed: {},
     template: `
-      <div>
-        <div class="border bg-[#FEF0C7] p-4">
-          <!-- ฟอร์มเพิ่มข้อมูล -->
-          <label for="name" class="block text-sm font-medium text-gray-700">ชื่อเจ้าหน้าที่</label>
-          <input type="text" id="name" v-model="name" class="mt-1 block w-full p-2 border rounded-md" placeholder="ชื่อ-สกุล">
+        <div class="flex items-center justify-center ">
+            <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
 
-          <label for="name" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้</label>
-          <input type="text" id="name" v-model="username" class="mt-1 block w-full p-2 border rounded-md" placeholder="username">
+              <form>
+                <!-- ชื่อเจ้าหน้าที่ -->
+                <div class="mb-4">
+                  <label for="name" class="block text-sm font-semibold text-gray-700">ชื่อเจ้าหน้าที่</label>
+                  <input type="text" id="name" v-model="name"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="ชื่อ-สกุล">
+                </div>
 
-          <label for="name" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
-          <input type="text" id="name" v-model="password" class="mt-1 block w-full p-2 border rounded-md" placeholder="password">
+                <!-- ชื่อผู้ใช้ -->
+                <div class="mb-4">
+                  <label for="username" class="block text-sm font-semibold text-gray-700">ชื่อผู้ใช้</label>
+                  <input type="text" id="username" v-model="username"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="username">
+                </div>
 
-        </div>
-      </div>
+                <!-- รหัสผ่าน -->
+                <div class="mb-4">
+                  <label for="password" class="block text-sm font-semibold text-gray-700">รหัสผ่าน</label>
+                  <input type="password" id="password" v-model="password"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="password">
+                </div>
+              </form>
+            </div>
+          </div>
     `,
   });
 
@@ -62,14 +75,12 @@ async function add_user() {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      // Trigger Save action
-      // console.log(app._instance.proxy.item);
       test();
     }
   });
 
   async function test() {
-    if (!name || !username || password) {
+    if (!name || !username || !password) {
       await Swal.fire({
         title: "กรอกข้อมูลให้ครบถ้วน",
         icon: "error",
@@ -123,19 +134,34 @@ async function edit_user(id_user) {
     methods: {},
     computed: {},
     template: `
-      <div>
-        <div class="border bg-[#FEF0C7] p-4">
-          <!-- ฟอร์มแก้ไขข้อมูล -->
-          <label for="name" class="block text-sm font-medium text-gray-700">ชื่อเจ้าหน้าที่</label>
-          <input type="text" id="name" v-model="name" class="mt-1 block w-full p-2 border rounded-md" placeholder="ชื่อ-สกุล">
+        <div class="flex items-center justify-center ">
+            <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
 
-          <label for="username" class="block text-sm font-medium text-gray-700">ชื่อผู้ใช้</label>
-          <input type="text" id="username" v-model="username" class="mt-1 block w-full p-2 border rounded-md" placeholder="username">
+              <form>
+                <!-- ชื่อเจ้าหน้าที่ -->
+                <div class="mb-4">
+                  <label for="name" class="block text-sm font-semibold text-gray-700">ชื่อเจ้าหน้าที่</label>
+                  <input type="text" id="name" v-model="name"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="ชื่อ-สกุล">
+                </div>
 
-          <label for="password" class="block text-sm font-medium text-gray-700">รหัสผ่าน</label>
-          <input type="text" id="password" v-model="password" class="mt-1 block w-full p-2 border rounded-md" placeholder="password">
-        </div>
-      </div>
+                <!-- ชื่อผู้ใช้ -->
+                <div class="mb-4">
+                  <label for="username" class="block text-sm font-semibold text-gray-700">ชื่อผู้ใช้</label>
+                  <input type="text" id="username" v-model="username"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="username">
+                </div>
+
+                <!-- รหัสผ่าน -->
+                <div class="mb-4">
+                  <label for="password" class="block text-sm font-semibold text-gray-700">รหัสผ่าน</label>
+                  <input type="password" id="password" v-model="password"
+                    class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:border-orange-500 focus:ring-orange-500 transition shadow-sm" placeholder="password">
+                </div>
+
+              </form>
+            </div>
+          </div>
     `,
   });
 

@@ -231,6 +231,7 @@ async function edit(id_form) {
           >
             <h1 class="text-xl font-semibold text-blue-600">รหัสของหายที่: {{ data.id }}</h1>
             <p class="text-gray-700"><span class="font-semibold">ชื่อผู้แจ้ง:</span> {{ data.name }}</p>
+            <p class="text-gray-700"><span class="font-semibold">เบอร์โทร:</span> {{ data.phone }}</p>
             <p class="text-gray-700"><span class="font-semibold">ประเภท:</span> {{ data.category }}</p>
             <p class="text-gray-700"><span class="font-semibold">รายละเอียด:</span> {{ data.detail }}</p>
           </div>
@@ -316,7 +317,7 @@ async function deleteItem(id) {
     <HamburgerMenuAdmin />
     <div class="md:py-[2rem] py-3 px-3 md:px-[3rem]">
       <div>
-        <h1 class="text-[4rem]">ยินดีต้อนรับเข้าสู่dadad</h1>
+        <h1 class="text-[4rem]">ยินดีต้อนรับเข้าสู่</h1>
         <p class="text-[2rem]">รายการของหาย</p>
       </div>
       <div class="grid md:grid-cols-2 gap-[3rem]">
@@ -331,7 +332,7 @@ async function deleteItem(id) {
               id="Search"
               type="text"
               placeholder="พิมพ์เพื่อค้นหา..."
-              class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+              class="!outline-none p-2 border-2 rounded-md border-blue-200"
             />
           </div>
 
@@ -344,7 +345,7 @@ async function deleteItem(id) {
               <!-- Select วันที่ -->
               <select
                 v-model="selectedDay"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option v-for="day in days" :key="day" :value="day">
                   {{ day }}
@@ -356,7 +357,7 @@ async function deleteItem(id) {
               <!-- Select เดือน -->
               <select
                 v-model="selectedMonth"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option
                   v-for="(month, index) in months"
@@ -372,7 +373,7 @@ async function deleteItem(id) {
               <!-- Select ปี -->
               <select
                 v-model="selectedYear"
-                class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+                class="!outline-none p-2 border-2 rounded-md border-amber-200"
               >
                 <option v-for="year in years" :key="year" :value="year">
                   {{ year }}
@@ -394,7 +395,7 @@ async function deleteItem(id) {
             <select
               id="category"
               v-model="selectedCategory"
-              class="border p-2 rounded-md focus:ring-2 focus:ring-amber-400 focus:outline-none"
+              class="!outline-none p-2 border-2 rounded-md border-blue-200"
             >
               <option value="" disabled selected>เลือกหมวดหมู่</option>
               <option
@@ -406,7 +407,10 @@ async function deleteItem(id) {
               </option>
             </select>
           </div>
-          <select v-model="selectedStatus" class="border p-2 rounded-md">
+          <select
+            v-model="selectedStatus"
+            class="!outline-none p-2 border-2 rounded-md border-amber-200"
+          >
             <option value="">-- สถานะทั้งหมด --</option>
             <option value="1">กำลังรอเจ้าของมารับ</option>
             <option value="2">ส่งคืนสำเร็จ</option>
@@ -430,29 +434,62 @@ async function deleteItem(id) {
         </div>
       </div>
       <div class="mt-[2rem]">
-        <div class="overflow-x-auto">
+        <div class="overflow-y-auto">
           <table
             class="w-full border border-gray-300 shadow-md rounded-lg overflow-hidden hidden md:table"
           >
             <thead>
               <tr class="bg-amber-200 text-gray-700 text-sm">
-                <th class="border-r border-amber-400 p-3 text-left">#</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  #
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   หมวดหมู่
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   ชื่อผู้แจ้ง
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">รูปภาพ</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  เบอร์โทร
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  รูปภาพ
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   รายละเอียด
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   วันที่พบ
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานที่</th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานะ</th>
-                <th class="border-r border-amber-400 p-2">แก้ไข</th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานที่
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานะ
+                </th>
+                <th
+                  class="border-r border-amber-400 p-2 text-center text-[1.4rem]"
+                >
+                  แก้ไข
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -461,12 +498,21 @@ async function deleteItem(id) {
                 :key="item.id"
                 class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
               >
-                <td class="border-r border-amber-400 p-3">0{{ item.id }}</td>
-                <td class="border-r border-amber-400 p-3">
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
+                  0{{ item.id }}
+                </td>
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
                   {{ test[item.category] }}
                 </td>
-                <td class="border-r border-amber-400 p-3">{{ item.name }}</td>
-                <td class="border-r border-amber-400 p-3 w-[200px]">
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
+                  {{ item.name }}
+                </td>
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
+                  {{ item.phone }}
+                </td>
+                <td
+                  class="border-r border-amber-400 p-3 w-[200px] text-[1.2rem]"
+                >
                   <img
                     v-if="item.picture"
                     class="object-cover w-[150px] h-[150px] rounded-md shadow-sm"
@@ -474,20 +520,22 @@ async function deleteItem(id) {
                     alt="Lost Item"
                   />
                 </td>
-                <td class="border-r border-amber-400 p-3">{{ item.detail }}</td>
-                <td class="border-r border-amber-400 p-3">
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
+                  {{ item.detail }}
+                </td>
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
                   {{ new Date(item.date).toLocaleDateString() }}
                 </td>
-                <td class="border-r border-amber-400 p-3">
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
                   {{ item.location }}
                 </td>
                 <td
-                  class="border-r border-amber-400 p-3 font-semibold"
+                  class="border-r border-amber-400 p-3 font-semibold text-[1.2rem] text-center"
                   :class="item.status === 2 ? 'text-green-500' : 'text-red-500'"
                 >
                   {{ test2[item.status] }}
                 </td>
-                <td class="border-r border-amber-400 p-3">
+                <td class="border-r border-amber-400 p-3 text-[1.2rem]">
                   <div class="grid grid-cols-2 gap-2 mt-3">
                     <button
                       @click="edit(item.id)"
@@ -605,5 +653,8 @@ async function deleteItem(id) {
 @import url("https://fonts.googleapis.com/css2?family=Itim&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
 body {
   font-family: "Kanit", serif;
+}
+button {
+  cursor: pointer;
 }
 </style>

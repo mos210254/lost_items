@@ -17,9 +17,11 @@ const latestItems = computed(() => {
 import { createApp } from "vue/dist/vue.esm-bundler";
 async function edit(id_form) {
   const container = document.createElement("div");
+  const allItems = await $fetch("http://192.168.1.27:8000/api/lost-item");
+  console.log(allItems);
   let data_item;
   try {
-    data_item = allItems.value.data.filter((e) => e.id === id_form);
+    data_item = allItems.data.filter((e) => e.id === id_form);
     console.log(data_item);
   } catch (error) {
     console.log(error);
@@ -27,21 +29,36 @@ async function edit(id_form) {
 
   const app = createApp({
     data() {
-      return {};
+      return {
+        data_item,
+      };
     },
     template: `
-      <div>H1</div>
+        <div class="grid grid-cols-1   gap-5">
+          <div
+            v-for="data in data_item"
+            :key="data.id"
+            class="bg-white shadow-lg rounded-xl p-5 border border-gray-200"
+          >
+            <h1 class="text-xl font-semibold text-blue-600">รหัสของหายที่: {{ data.id }}</h1>
+            <p class="text-gray-700"><span class="font-semibold">ชื่อผู้แจ้ง:</span> {{ data.name }}</p>
+            <p class="text-gray-700"><span class="font-semibold">เบอร์โทร:</span> {{ data.phone }}</p>
+            <p class="text-gray-700"><span class="font-semibold">ประเภท:</span> {{ data.category }}</p>
+            <p class="text-gray-700"><span class="font-semibold">รายละเอียด:</span> {{ data.detail }}</p>
+          </div>
+        </div>
     `,
   });
   app.mount(container);
 
   Swal.fire({
-    title: "แก้ไขอุปกรณ์",
+    title: "รายละเอียด",
     html: container,
     width: "500px",
     showCancelButton: true,
-    confirmButtonText: "บันทึก",
+    confirmButtonText: "คืนสำเส็จ",
     cancelButtonText: "ยกเลิก",
+    confirmButtonColor: "#28a745", // ✅ ปุ่มสีเขียว
     allowOutsideClick: false,
     allowEscapeKey: false,
     didClose: () => {
@@ -61,17 +78,15 @@ async function edit(id_form) {
     const res = await $fetch("http://192.168.1.27:8000/lost-item/status", {
       method: "PUT",
       body: data,
-      headers: { "Content-Type": "application/json" },
     });
-    await Swal.fire({
-      title: "แก้ไขสำเร็จ",
+    Swal.fire({
+      title: "อัปเดตสถานะเรียบร้อย",
       icon: "success",
       timer: 1000,
       showConfirmButton: false,
       allowOutsideClick: false,
       allowEscapeKey: false,
     });
-    reloadNuxtApp({ ttl: 1 });
   }
 }
 async function deleteItem(id) {
@@ -163,38 +178,62 @@ const test2 = computed(() => ({
       </div>
       <div class="mt-[2rem] mb-2">
         <p class="my-2 text-2xl">5 รายการล่าสุด</p>
-        <div
-          class="border border-gray-300 shadow-md rounded-lg overflow-x-auto hidden md:block"
-        >
+        <div class="rounded-lg overflow-x-auto hidden md:block">
           <table class="w-full hidden md:table">
             <thead>
               <tr class="bg-amber-200 text-gray-700 text-sm">
-                <th class="border-r border-amber-400 p-3 text-left">#</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  #
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   หมวดหมู่
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">รูปภาพ</th>
-                <th class="border-r border-amber-400 p-3 text-left">
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  รูปภาพ
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
                   วันที่พบ
                 </th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานที่</th>
-                <th class="border-r border-amber-400 p-3 text-left">สถานะ</th>
-                <th class="border-r border-amber-400 p-3 text-left">แก้ไข</th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานที่
+                </th>
+                <th
+                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                >
+                  สถานะ
+                </th>
+                <th class="p-3 text-center text-[1.4rem]">จัดการ</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="item in latestItems"
                 :key="item.id"
-                class="odd:bg-[#ECF8F8] even:[#E3F2FD] hover:bg-gray-100 transition"
+                class="odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition"
               >
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td
+                  class="border-r border-amber-100 p-3 text-left text-[1.2rem]"
+                >
                   0{{ item.id }}
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td
+                  class="border-r border-amber-100 p-3 text-left text-[1.2rem]"
+                >
                   {{ item.category }}
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left w-[200px]">
+                <td
+                  class="border-r border-amber-100 p-3 text-left w-[200px] text-[1.2rem]"
+                >
                   <img
                     v-if="item.picture"
                     class="object-cover w-[150px] h-[150px] rounded-md shadow-sm"
@@ -202,16 +241,23 @@ const test2 = computed(() => ({
                     alt="Lost Item"
                   />
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td
+                  class="border-r border-amber-100 p-3 text-left text-[1.2rem]"
+                >
                   {{ new Date(item.date).toLocaleDateString() }}
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td
+                  class="border-r border-amber-100 p-3 text-left text-[1.2rem]"
+                >
                   {{ item.location }}
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td
+                  class="border-r border-amber-100 p-3 font-semibold text-[1.2rem] text-center"
+                  :class="item.status === 2 ? 'text-green-500' : 'text-red-500'"
+                >
                   {{ test2[item.status] }}
                 </td>
-                <td class="border-r border-amber-100 p-3 text-left">
+                <td class="p-3 text-left text-[1.2rem]">
                   <div class="grid grid-cols-2 gap-2 mt-3">
                     <button
                       @click="edit(item.id)"
@@ -312,6 +358,14 @@ const test2 = computed(() => ({
             </button>
           </div>
         </div>
+      </div>
+      <div class="flex">
+        <p
+          class="bg-blue-200 p-3 rounded-2xl text-[16px] border border-blue-700"
+        >
+          สามารถไปแจ้งรับ/แจ้งของหายได้ที่ <br />
+          ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
+        </p>
       </div>
     </div>
   </div>

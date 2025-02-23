@@ -256,7 +256,10 @@ function btn_reset() {
               </option>
             </select>
           </div>
-          <select v-model="selectedStatus" class="!outline-none p-2 border-2 rounded-md border-amber-200">
+          <select
+            v-model="selectedStatus"
+            class="!outline-none p-2 border-2 rounded-md border-amber-200"
+          >
             <option value="">-- สถานะทั้งหมด --</option>
             <option value="1">กำลังรอเจ้าของมารับ</option>
             <option value="2">ส่งคืนสำเร็จ</option>
@@ -266,13 +269,13 @@ function btn_reset() {
           <div id="btn" class="flex flex-wrap gap-3">
             <button
               @click="data_serach()"
-              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md  hover:bg-amber-600 transition"
+              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition"
             >
               ค้นหา
             </button>
             <button
               @click="btn_reset()"
-              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md  hover:bg-gray-400 transition"
+              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
             >
               ค่าเริ่มต้น
             </button>
@@ -318,7 +321,7 @@ function btn_reset() {
                   สถานที่
                 </th>
                 <th
-                  class="border-r border-amber-400 p-3 text-center text-[1.4rem]"
+                  class=" p-3 text-center text-[1.4rem]"
                 >
                   สถานะ
                 </th>
@@ -446,10 +449,14 @@ function btn_reset() {
           </button>
         </div>
       </div>
-      <p>
-        สามารถไปรับของหายได้ที่ <br />
-        ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
-      </p>
+      <div class="flex">
+        <p
+          class="bg-blue-200 p-3 rounded-2xl text-[16px] border border-blue-700"
+        >
+          สามารถไปแจ้งรับ/แจ้งของหายได้ที่ <br />
+          ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2
+        </p>
+      </div>
     </div>
   </div>
 </template>

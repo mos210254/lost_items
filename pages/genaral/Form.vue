@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-
+const isSubmitting = ref(false); // ⏳ ตัวแปรสถานะ
 const categoriesTH = ref({
   cash: "เงินสด",
   glass: "แก้วน้ำ",
@@ -86,7 +86,44 @@ const handleFileUpload = (event) => {
   form.value.picture = event.target.files[0]; // เก็บไฟล์ภาพ
 };
 
+const validateForm = () => {
+  if (!form.value.name) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณากรอกชื่อ", "info");
+    return false;
+  }
+  if (!form.value.phone) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณากรอกเบอร์โทร", "info");
+    return false;
+  }
+  if (!form.value.category) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณาเลือกหมวดหมู่", "info");
+    return false;
+  }
+  if (!form.value.details) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณากรอกรายละเอียด", "info");
+    return false;
+  }
+  if (!form.value.date) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณาเลือกวันที่", "info");
+    return false;
+  }
+  if (!form.value.location) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณากรอกสถานที่", "info");
+    return false;
+  }
+  if (!form.value.picture) {
+    Swal.fire("ต้องมีรูปภาพประกอบ", "กรุณาแนบรูปภาพ", "info");
+    return false;
+  }
+  return true;
+};
+
 const submitForm = async () => {
+  if (!validateForm()) {
+    return; // 🛑 หยุดส่ง ถ้ามีข้อผิดพลาด
+  }
+  isSubmitting.value = true; // 🚫 ปิดปุ่มก่อนส่ง
+
   const formData = new FormData();
   formData.append("name", form.value.name);
   formData.append("category", form.value.category);
@@ -107,143 +144,158 @@ const submitForm = async () => {
     });
 
     const result = await response.json();
+    console.log("📩 ข้อความตอบกลับ", result);
+
     if (result.status === 200) {
-      // ✅ ส่งข้อความแจ้งเตือน
       const message = `📢 แจ้งเตือน! พบของหายแล้ว 🎒\n📍 สถานที่: ${
         form.value.location
       }\n⏰ เวลา: ${new Date().toLocaleString()}`;
       await sendTelegramMessage(message);
 
-      // ✅ ส่งรูปภาพไป Telegram ถ้ามีแนบมา
       if (form.value.picture) {
         await sendTelegramPhoto(form.value.picture);
       }
 
-      await Swal.fire("Success", "Report submitted successfully", "success");
-      window.location.reload();
+      const id = result.id;
+
+      await Swal.fire({
+        title: "รหัสของหายของคุณคือ: " + id,
+        text: "กรุณาติดต่อ: ฝ่ายไอที - คณะวิทยาศาสตร์และเทคโนโลยี: ชั้น 2 เพื่อฝากของ",
+        icon: "success",
+        confirmButtonText: "ตกลง",
+      });
+
+      navigateTo("/genaral");
     } else {
       Swal.fire("Error", "Something went wrong", "error");
     }
   } catch (error) {
+    console.error("❌ เกิดข้อผิดพลาด:", error);
     Swal.fire("Error", "Failed to submit report", "error");
   }
 };
 </script>
 
 <template>
-  <div class="">
+  <div
+    class="relative min-h-screen flex items-center justify-center bg-gray-400"
+  >
     <HamburgerMenu />
-    <div class="h-[100vh] flex items-center justify-center">
-      <div class="mx-auto w-full max-w-[550px] bg-white p-12">
-        <form @submit.prevent="submitForm">
-          <!-- ชื่อผู้แจ้ง -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >ชื่อ-นามสกุล</label
-            >
-            <input
-              type="text"
-              v-model="form.name"
-              required
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            />
-          </div>
 
-          <!-- เบอร์โทร -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >เบอร์โทรติดต่อ</label
-            >
-            <input
-              type="text"
-              v-model="form.phone"
-              required
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            />
-          </div>
+    <div class="mx-auto w-full max-w-[550px] bg-white p-8 rounded-xl shadow-lg">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
+        แจ้งพบของหาย
+      </h2>
 
-          <!-- หมวดหมู่ของหาย -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >หมวดหมู่ของหาย</label
-            >
-            <select
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-              id="category"
-              v-model="form.category"
-            >
-              <option value="" disabled selected>เลือกหมวดหมู่</option>
-              <option
-                v-for="(label, value) in categoriesTH"
-                :key="value"
-                :value="value"
-              >
-                {{ label }}
-              </option>
-            </select>
-          </div>
+      <form @submit.prevent="submitForm">
+        <!-- ชื่อผู้แจ้ง -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >ชื่อ-นามสกุล</label
+          >
+          <input
+            type="text"
+            v-model="form.name"
+            required
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          />
+        </div>
 
-          <!-- รายละเอียด -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >รายละเอียดสิ่งของ</label
-            >
-            <textarea
-              v-model="form.details"
-              required
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            ></textarea>
-          </div>
+        <!-- เบอร์โทร -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >เบอร์โทรติดต่อ</label
+          >
+          <input
+            type="text"
+            v-model="form.phone"
+            required
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          />
+        </div>
 
-          <!-- วันที่พบของหาย -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >วันที่พบของหาย</label
+        <!-- หมวดหมู่ของหาย -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >หมวดหมู่ของหาย</label
+          >
+          <select
+            v-model="form.category"
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          >
+            <option value="" disabled selected>เลือกหมวดหมู่</option>
+            <option
+              v-for="(label, value) in categoriesTH"
+              :key="value"
+              :value="value"
             >
-            <input
-              type="date"
-              v-model="form.date"
-              required
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            />
-          </div>
+              {{ label }}
+            </option>
+          </select>
+        </div>
 
-          <!-- สถานที่พบของหาย -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]"
-              >สถานที่พบของหาย</label
-            >
-            <input
-              type="text"
-              v-model="form.location"
-              required
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            />
-          </div>
+        <!-- รายละเอียด -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >รายละเอียดสิ่งของ</label
+          >
+          <textarea
+            v-model="form.details"
+            required
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          ></textarea>
+        </div>
 
-          <!-- อัปโหลดรูปภาพ -->
-          <div class="mb-5">
-            <label class="mb-3 block text-base font-medium text-[#07074D]">
-              อัปโหลดรูปภาพ
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleFileUpload"
-              class="w-full rounded-md border border-gray-300 py-3 px-6 text-base"
-            />
-          </div>
+        <!-- วันที่พบของหาย -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >วันที่พบของหาย</label
+          >
+          <input
+            type="date"
+            v-model="form.date"
+            required
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          />
+        </div>
 
-          <div>
-            <button
-              type="submit"
-              class="cursor-pointer w-full rounded-md bg-blue-600 py-3 px-8 text-center text-base font-semibold text-white"
-            >
-              ส่งข้อมูล
-            </button>
-          </div>
-        </form>
-      </div>
+        <!-- สถานที่พบของหาย -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >สถานที่พบของหาย</label
+          >
+          <input
+            type="text"
+            v-model="form.location"
+            required
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          />
+        </div>
+
+        <!-- อัปโหลดรูปภาพ -->
+        <div class="mb-4">
+          <label class="block text-gray-700 font-medium mb-2"
+            >อัปโหลดรูปภาพ</label
+          >
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleFileUpload"
+            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+          />
+        </div>
+
+        <!-- ปุ่มส่งข้อมูล -->
+        <div class="mt-6">
+          <button
+            type="submit"
+            :disabled="isSubmitting"
+            class="cursor-pointer w-full py-3 rounded-lg text-white font-semibold text-lg bg-blue-400 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+          >
+            {{ isSubmitting ? "กำลังส่งข้อมูล..." : "ส่งข้อมูล" }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
