@@ -133,7 +133,7 @@ const submitForm = async () => {
 <template>
   <div class="">
     <HamburgerMenu />
-    <div class="h-[100vh] flex items-center justify-center">
+    <div class=" flex items-center justify-center">
       <div class="mx-auto w-full max-w-[550px] bg-white p-12">
         <form @submit.prevent="submitForm">
           <!-- ชื่อผู้แจ้ง -->

@@ -256,7 +256,10 @@ function btn_reset() {
               </option>
             </select>
           </div>
-          <select v-model="selectedStatus" class="!outline-none p-2 border-2 rounded-md border-amber-200">
+          <select
+            v-model="selectedStatus"
+            class="!outline-none p-2 border-2 rounded-md border-amber-200"
+          >
             <option value="">-- สถานะทั้งหมด --</option>
             <option value="1">กำลังรอเจ้าของมารับ</option>
             <option value="2">ส่งคืนสำเร็จ</option>
@@ -266,13 +269,13 @@ function btn_reset() {
           <div id="btn" class="flex flex-wrap gap-3">
             <button
               @click="data_serach()"
-              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md  hover:bg-amber-600 transition"
+              class="cursor-pointer px-5 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition"
             >
               ค้นหา
             </button>
             <button
               @click="btn_reset()"
-              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md  hover:bg-gray-400 transition"
+              class="cursor-pointer px-5 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition"
             >
               ค่าเริ่มต้น
             </button>
@@ -453,5 +456,9 @@ function btn_reset() {
     </div>
   </div>
 </template>
-
-<style></style>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Itim&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap");
+body {
+  font-family: "Kanit", serif;
+}
+</style>
