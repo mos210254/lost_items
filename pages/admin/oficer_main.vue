@@ -5,7 +5,7 @@ definePageMeta({
 import { ref, computed } from "vue";
 
 const { data: allItems } = await useFetch(
-  "http://192.168.1.27:8000/api/lost-item"
+  "http://192.168.1.26:8000/api/lost-item"
 );
 console.log(allItems.value.data);
 
@@ -17,7 +17,7 @@ const latestItems = computed(() => {
 import { createApp } from "vue/dist/vue.esm-bundler";
 async function edit(id_form) {
   const container = document.createElement("div");
-  const allItems = await $fetch("http://192.168.1.27:8000/api/lost-item");
+  const allItems = await $fetch("http://192.168.1.26:8000/api/lost-item");
   console.log(allItems);
   let data_item;
   try {
@@ -58,7 +58,7 @@ async function edit(id_form) {
     showCancelButton: true,
     confirmButtonText: "คืนสำเส็จ",
     cancelButtonText: "ยกเลิก",
-    confirmButtonColor: "#28a745", // ✅ ปุ่มสีเขียว
+    confirmButtonColor: "#28a745",
     allowOutsideClick: false,
     allowEscapeKey: false,
     didClose: () => {
@@ -75,7 +75,7 @@ async function edit(id_form) {
       id: id_form,
       status: 2,
     };
-    const res = await $fetch("http://192.168.1.27:8000/lost-item/status", {
+    const res = await $fetch("http://192.168.1.26:8000/lost-item/status", {
       method: "PUT",
       body: data,
     });
@@ -103,7 +103,7 @@ async function deleteItem(id) {
 
   try {
     const response = await fetch(
-      `http://192.168.1.27:8000/api/lost-item/${id}`,
+      `http://192.168.1.26:8000/api/lost-item/${id}`,
       {
         method: "DELETE",
       }
@@ -237,7 +237,7 @@ const test2 = computed(() => ({
                   <img
                     v-if="item.picture"
                     class="object-cover w-[150px] h-[150px] rounded-md shadow-sm"
-                    :src="'http://192.168.1.27:8000' + item.picture"
+                    :src="'http://192.168.1.26:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>

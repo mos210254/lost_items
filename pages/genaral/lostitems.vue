@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 const { data: allItems } = await useFetch(
-  "http://192.168.1.27:8000/api/lost-item"
+  "http://192.168.1.26:8000/api/lost-item"
 );
 console.log(allItems.value.data);
 
@@ -34,20 +34,7 @@ const selectedMonth = ref(null);
 const selectedYear = ref(null);
 
 const days = ref(Array.from({ length: 31 }, (_, i) => i + 1));
-const months = ref([
-  "มกราคม",
-  "กุมภาพันธ์",
-  "มีนาคม",
-  "เมษายน",
-  "พฤษภาคม",
-  "มิถุนายน",
-  "กรกฎาคม",
-  "สิงหาคม",
-  "กันยายน",
-  "ตุลาคม",
-  "พฤศจิกายน",
-  "ธันวาคม",
-]);
+const months = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 const years = ref([2024, 2025]);
 
 const selectedCategory = ref("");
@@ -349,7 +336,7 @@ function btn_reset() {
                   <img
                     v-if="item.picture"
                     class="object-cover w-[200px] h-[200px] rounded-md shadow-sm"
-                    :src="'http://192.168.1.27:8000' + item.picture"
+                    :src="'http://192.168.1.26:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>
@@ -357,7 +344,7 @@ function btn_reset() {
                   {{ item.detail }}
                 </td>
                 <td class="border-r border-amber-100 p-3 text-[1.2rem]">
-                  {{ new Date(item.date).toLocaleDateString() }}
+                  {{ new Date(item.date).toLocaleDateString("en-US") }}
                 </td>
                 <td class="border-r border-amber-100 p-3 text-[1.2rem]">
                   {{ item.location }}

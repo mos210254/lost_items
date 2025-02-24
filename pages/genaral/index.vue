@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 
 const { data: allItems } = await useFetch(
-  "http://192.168.1.27:8000/api/lost-item"
+  "http://192.168.1.26:8000/api/lost-item"
 );
 console.log(allItems.value.data);
 
@@ -126,7 +126,7 @@ const test = computed(() => ({
                   <img
                     v-if="item.picture"
                     class="object-cover w-[200px] h-[200px] rounded-md shadow-sm"
-                    :src="'http://192.168.1.27:8000' + item.picture"
+                    :src="'http://192.168.1.26:8000' + item.picture"
                     alt="Lost Item"
                   />
                 </td>
@@ -164,7 +164,7 @@ const test = computed(() => ({
             <div v-if="item.picture" class="my-2 text-center">
               <img
                 class="object-cover w-full h-[200px] md:h-[150px] rounded-md shadow-sm"
-                :src="'http://192.168.1.27:8000' + item.picture"
+                :src="'http://192.168.1.26:8000' + item.picture"
                 alt="Lost Item"
               />
             </div>

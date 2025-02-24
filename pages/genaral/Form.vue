@@ -138,7 +138,7 @@ const submitForm = async () => {
   }
 
   try {
-    const response = await fetch("http://192.168.1.27:8000/api/lost-item", {
+    const response = await fetch("http://192.168.1.26:8000/api/lost-item", {
       method: "POST",
       body: formData,
     });
