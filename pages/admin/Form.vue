@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import useApiConfig from "@/config.js";
+
+const { BASE_URL } = useApiConfig();
 const isSubmitting = ref(false); // ⏳ ตัวแปรสถานะ
 const categoriesTH = ref({
   cash: "เงินสด",
@@ -137,7 +139,7 @@ const submitForm = async () => {
   }
 
   try {
-    const response = await fetch("http://192.168.1.26:8000/api/lost-item", {
+    const response = await fetch(`${BASE_URL}/api/lost-item`, {
       method: "POST",
       body: formData,
     });
@@ -176,125 +178,103 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div
-    class="relative min-h-screen flex items-center justify-center bg-gray-400"
-  >
-    <HamburgerMenuAdmin />
+    <div class="relative min-h-screen flex items-center justify-center bg-gray-400">
+        <HamburgerMenuAdmin />
 
-    <div class="mx-auto w-full max-w-[550px] bg-white p-8 rounded-xl shadow-lg">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
-        แจ้งพบของหาย
-      </h2>
+        <div class="mx-auto w-full max-w-[550px] bg-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">แจ้งพบของหาย</h2>
 
-      <form @submit.prevent="submitForm">
-        <!-- ชื่อผู้แจ้ง -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >ชื่อ-นามสกุล</label
-          >
-          <input
-            type="text"
-            v-model="form.name"
-            required
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          />
+            <form @submit.prevent="submitForm">
+                <!-- ชื่อผู้แจ้ง -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">ชื่อ-นามสกุล</label>
+                    <input
+                        type="text"
+                        v-model="form.name"
+                        required
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    />
+                </div>
+
+                <!-- เบอร์โทร -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">เบอร์โทรติดต่อ</label>
+                    <input
+                        type="text"
+                        v-model="form.phone"
+                        required
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    />
+                </div>
+
+                <!-- หมวดหมู่ของหาย -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ของหาย</label>
+                    <select
+                        v-model="form.category"
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    >
+                        <option value="" disabled selected>เลือกหมวดหมู่</option>
+                        <option v-for="(label, value) in categoriesTH" :key="value" :value="value">
+                            {{ label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- รายละเอียด -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">รายละเอียดสิ่งของ</label>
+                    <textarea
+                        v-model="form.details"
+                        required
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    ></textarea>
+                </div>
+
+                <!-- วันที่พบของหาย -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">วันที่พบของหาย</label>
+                    <input
+                        type="date"
+                        v-model="form.date"
+                        required
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    />
+                </div>
+
+                <!-- สถานที่พบของหาย -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">สถานที่พบของหาย</label>
+                    <input
+                        type="text"
+                        v-model="form.location"
+                        required
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    />
+                </div>
+
+                <!-- อัปโหลดรูปภาพ -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพ</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        @change="handleFileUpload"
+                        class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
+                    />
+                </div>
+
+                <!-- ปุ่มส่งข้อมูล -->
+                <div class="mt-6">
+                    <button
+                        type="submit"
+                        :disabled="isSubmitting"
+                        class="cursor-pointer w-full py-3 rounded-lg text-white font-semibold text-lg bg-blue-400 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+                    >
+                        {{ isSubmitting ? "กำลังส่งข้อมูล..." : "ส่งข้อมูล" }}
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <!-- เบอร์โทร -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >เบอร์โทรติดต่อ</label
-          >
-          <input
-            type="text"
-            v-model="form.phone"
-            required
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          />
-        </div>
-
-        <!-- หมวดหมู่ของหาย -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >หมวดหมู่ของหาย</label
-          >
-          <select
-            v-model="form.category"
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          >
-            <option value="" disabled selected>เลือกหมวดหมู่</option>
-            <option
-              v-for="(label, value) in categoriesTH"
-              :key="value"
-              :value="value"
-            >
-              {{ label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- รายละเอียด -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >รายละเอียดสิ่งของ</label
-          >
-          <textarea
-            v-model="form.details"
-            required
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          ></textarea>
-        </div>
-
-        <!-- วันที่พบของหาย -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >วันที่พบของหาย</label
-          >
-          <input
-            type="date"
-            v-model="form.date"
-            required
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          />
-        </div>
-
-        <!-- สถานที่พบของหาย -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >สถานที่พบของหาย</label
-          >
-          <input
-            type="text"
-            v-model="form.location"
-            required
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          />
-        </div>
-
-        <!-- อัปโหลดรูปภาพ -->
-        <div class="mb-4">
-          <label class="block text-gray-700 font-medium mb-2"
-            >อัปโหลดรูปภาพ</label
-          >
-          <input
-            type="file"
-            accept="image/*"
-            @change="handleFileUpload"
-            class="w-full rounded-md border-gray-300 py-3 px-4 text-base !outline-none p-2 border-2 transition"
-          />
-        </div>
-
-        <!-- ปุ่มส่งข้อมูล -->
-        <div class="mt-6">
-          <button
-            type="submit"
-            :disabled="isSubmitting"
-            class="cursor-pointer w-full py-3 rounded-lg text-white font-semibold text-lg bg-blue-400 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-          >
-            {{ isSubmitting ? "กำลังส่งข้อมูล..." : "ส่งข้อมูล" }}
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
 </template>
